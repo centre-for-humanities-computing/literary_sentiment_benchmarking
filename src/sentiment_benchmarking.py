@@ -15,6 +15,9 @@ from utils import get_sentiment
 import re
 from tqdm import tqdm
 
+# google translate
+from googletrans import Translator
+
 app = typer.Typer()
 logger.add("sentiment.log", format="{time} {message}")
 
@@ -39,6 +42,7 @@ def main(
     dataset_name: str = typer.Option("chcaa/fiction4sentiment", help="HF Dataset name, must contain 'text' and 'label' columns"),
     n_rows: Optional[int] = typer.Option(None, help="Limit to first N rows"),
     output_dir: Path = typer.Option("results", help="Directory where the results CSV will be saved"),
+    translate: bool = typer.Option(False, help="Translate Danish sentences to English using Google Translate"),
 ):
     # get model names
     #model_names = model_names.split(",")
@@ -51,11 +55,27 @@ def main(
     # clean text
     df['text'] = df['text'].apply(clean_whitespace)
 
+    # option to translate all sentences marked "dk" in org_lang to english w / google translate
+    if translate:
+        if 'org_lang' not in df.columns:
+            logger.warning("org_lang column not found. Continuing without translation.")
+
+        else:
+            translator = Translator()
+            # Translate only the rows where org_lang is 'dk'
+            logger.info("Translating Danish ('dk') sentences to English...")
+            tqdm.pandas(desc="Translating")
+            df.loc[df['org_lang'] == 'dk', 'text'] = df.loc[df['org_lang'] == 'dk', 'text'].progress_apply(
+                lambda x: translator.translate(x, src='da', dest='en').text)
+            logger.info("Translation completed.")
+        output_dir = Path("results/translated_sents")
+
     # TESTING PURPOSES (number of rows)
     if n_rows:
         df = df.head(n_rows)
         logger.info(f"Limiting to first {n_rows} rows for testing.")
 
+    # save column names for later
     colnames = []
 
     for model_name in model_names:
@@ -74,7 +94,7 @@ def main(
         logger.info(f"Model {model_name} completed.")
 
     output_dir.mkdir(parents=True, exist_ok=True)  # create directory if it doesn't exist
-    output_path = output_dir / "sentiment_benchmark_results.csv"
+    output_path = output_dir / f"sentiment_benchmark_results.csv"
     df.to_csv(output_path, index=False)
     print(f"\nSaved results to {output_path}")
     logger.info(f"Results saved to {output_path}")
@@ -107,25 +127,6 @@ def main(
             f.write(f"  p-value : {values['p-value']:.4g}\n\n")
 
     logger.info(f"Spearman results also written to {txt_output_path}")
-
-    # spearmanddict = {}
-
-    # for col in colnames + ['vader', 'tr_xlm_roberta']:
-    #     # Compute the spearman correlation
-    #     spearman_corr = spearmanr(df[col], df['label'])[0]
-    #     pval = spearmanr(df[col], df['label'])[1]
-    #     # write results to txt
-    #     with open(output_dir / "correlation_results.txt", "a") as f:
-    #         f.write(f"--- {col} ---\n")
-    #         f.write(f"{spearman_corr}\n")
-    #         f.write(f"p-value: {pval}\n")
-    #         f.write("\n")
-    #     # save to dict
-    #     spearmanddict[col] = [spearman_corr, pval]
-    #     # save to csv
-    #     df_spearman = pd.DataFrame.from_dict(spearmanddict, orient='index', columns=['Spearman Correlation', 'p-value'])
-    #     df_spearman.to_csv(output_dir / "spearman_results.csv", index=True)
-    # logger.info(f"Spearman correlation results saved to {output_dir / 'spearman_results.csv'}")
 
 if __name__ == "__main__":
     app()

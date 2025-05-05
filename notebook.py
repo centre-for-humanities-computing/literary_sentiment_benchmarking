@@ -76,3 +76,24 @@ print(f"Mean spearman correlation: {mean_spearman}")
 
 
 # %%
+
+# TRY OUT GOOGLE TRANSLATE
+#%pip install googletrans==4.0.0-rc1
+from googletrans import Translator
+
+df_dk = df[df['org_lang'] == 'dk']
+# get the first 10 rows
+df_dk = df_dk.head(10)
+
+# make a translator object
+translator = Translator()
+# translate the text
+
+for text in df_dk['text']:
+    # translate the text
+    translated = translator.translate(text, src='da', dest='en')
+    # print the translated text
+    print(translated.text)
+# %%
+df_dk
+# %%

@@ -9,6 +9,8 @@
 
     option to add, for testing a number of rows to run, e.g.: ```--n-rows 10``` (remember \ at end of previous line then). I.e.: script, modelnames (can be multiple) and testrows (optional)
 
+    option to add, for google-translating, ```--translate True```
+
 - results (csv cols data & spearman results) in ```results``` folder
 
 ### What it does:
