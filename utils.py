@@ -7,19 +7,20 @@ from loguru import logger
 def conv_scores(label, score, spec_lab):  # single label and score
     """
     Converts transformer-based sentiment scores to a uniform scale based on specified labels.
+    We need to lowercase since sometimes, a model will have as label "Neutral" or "neutral" or "NEUTRAL"
     """
     if len(spec_lab) == 2:
-        if label == spec_lab[0]:  # "positive"
+        if label.lower() == spec_lab[0]:  # "positive"
             return score
-        elif label == spec_lab[1]:  # "negative"
+        elif label.lower() == spec_lab[1]:  # "negative"
             return -score  # return negative score
 
     elif len(spec_lab) == 3:
-        if label == spec_lab[0]:  # "positive"
+        if label.lower() == spec_lab[0]:  # "positive"
             return score
-        elif label == spec_lab[1]:  # "neutral"
+        elif label.lower() == spec_lab[1]:  # "neutral"
             return 0  # return 0 for neutral
-        elif label == spec_lab[2]:  # "negative"
+        elif label.lower() == spec_lab[2]:  # "negative"
             return -score  # return negative score
 
     else:
@@ -108,6 +109,8 @@ def get_sentiment(text, model, tokenizer):
 
         # Transform score to continuous scale
         xlm_converted_score = conv_scores(xlm_label, xlm_score, ["positive", "neutral", "negative"])
+        # make sure the score is a float
+        xlm_converted_score = float(xlm_converted_score)
         sentiment_scores.append(xlm_converted_score)
 
     # Calculate the mean sentiment score from the chunks

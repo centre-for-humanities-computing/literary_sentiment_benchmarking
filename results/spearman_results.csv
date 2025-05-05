@@ -1,0 +1,6 @@
+Model,Spearman,p-value
+twitter_xlm_roberta_base_sentiment_multilingual,0.5531805606711239,0.0
+memo_bert_sa,0.4653376430235756,0.0
+da_sentiment_base,0.22790286911134622,5.008845386242342e-75
+vader,0.5141685844125704,0.0
+tr_xlm_roberta,0.6429144559194179,0.0

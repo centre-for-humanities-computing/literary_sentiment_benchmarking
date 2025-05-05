@@ -5,6 +5,7 @@ from datasets import load_dataset
 from transformers import pipeline, AutoTokenizer
 import typer
 from loguru import logger
+from datetime import datetime
 from pathlib import Path
 
 from scipy.stats import spearmanr
@@ -39,6 +40,11 @@ def main(
     n_rows: Optional[int] = typer.Option(None, help="Limit to first N rows"),
     output_dir: Path = typer.Option("results", help="Directory where the results CSV will be saved"),
 ):
+    # get model names
+    #model_names = model_names.split(",")
+    print(f"Model names: {model_names}")
+    logger.info(f"Model names: {model_names}")
+
     # load dataset
     ds = load_dataset(dataset_name)
     df = pd.DataFrame(ds['train'], columns=['text', 'label', 'category', 'tr_xlm_roberta', 'vader', 'org_lang'])
@@ -53,7 +59,7 @@ def main(
     colnames = []
 
     for model_name in model_names:
-        print(f"\nRunning model: {model_name}")
+        print(f"\nRunning model: {model_name.upper()}")
         model = pipeline("text-classification", model=model_name)
         tokenizer = AutoTokenizer.from_pretrained(model_name)
 
@@ -75,24 +81,51 @@ def main(
 
     # Now we compute the spearman correlation with the models
     logger.info("Computing Spearman correlation with human labels...")
-    spearmanddict = {}
 
-    for col in colnames:
-        # Compute the spearman correlation
-        spearman_corr = spearmanr(df[col], df['label'])[0]
-        pval = spearmanr(df[col], df['label'])[1]
-        # write results to txt
-        with open(output_dir / "correlation_results.txt", "a") as f:
-            f.write(f"--- {col} ---\n")
-            f.write(f"{spearman_corr}\n")
-            f.write(f"p-value: {pval}\n")
-            f.write("\n")
-        # save to dict
-        spearmanddict[col] = [spearman_corr, pval]
-        # save to csv
-        df_spearman = pd.DataFrame.from_dict(spearmanddict, orient='index', columns=['Spearman Correlation', 'p-value'])
-        df_spearman.to_csv(output_dir / "spearman_results.csv", index=True)
-        logger.info(f"Spearman correlation results saved to {output_dir / 'spearman_results.csv'}")
+    # Dictionary to hold correlation results
+    spearman_dict = {}
+
+    for col in colnames + ['vader', 'tr_xlm_roberta']:
+        corr, pval = spearmanr(df[col], df['label'])
+        spearman_dict[col] = {'Spearman': corr, 'p-value': pval}
+
+    # Save to CSV
+    df_spearman = pd.DataFrame.from_dict(spearman_dict, orient='index')
+    df_spearman.to_csv(output_dir / "spearman_results.csv", index_label="Model")
+    logger.info(f"Spearman correlation results saved to {output_dir / 'spearman_results.csv'}")
+
+    # Save to TXT with timestamp in filename
+    timestamp = datetime.now().strftime("%Y-%m-%d_%H-%M-%S")
+    txt_output_path = output_dir / f"{timestamp}_spearman_log.txt"
+
+    with open(txt_output_path, "w") as f:
+        f.write(f"Spearman correlation results - {timestamp}\n")
+        f.write("=" * 40 + "\n")
+        for model, values in spearman_dict.items():
+            f.write(f"{model}:\n")
+            f.write(f"  Spearman: {values['Spearman']:.4f}\n")
+            f.write(f"  p-value : {values['p-value']:.4g}\n\n")
+
+    logger.info(f"Spearman results also written to {txt_output_path}")
+
+    # spearmanddict = {}
+
+    # for col in colnames + ['vader', 'tr_xlm_roberta']:
+    #     # Compute the spearman correlation
+    #     spearman_corr = spearmanr(df[col], df['label'])[0]
+    #     pval = spearmanr(df[col], df['label'])[1]
+    #     # write results to txt
+    #     with open(output_dir / "correlation_results.txt", "a") as f:
+    #         f.write(f"--- {col} ---\n")
+    #         f.write(f"{spearman_corr}\n")
+    #         f.write(f"p-value: {pval}\n")
+    #         f.write("\n")
+    #     # save to dict
+    #     spearmanddict[col] = [spearman_corr, pval]
+    #     # save to csv
+    #     df_spearman = pd.DataFrame.from_dict(spearmanddict, orient='index', columns=['Spearman Correlation', 'p-value'])
+    #     df_spearman.to_csv(output_dir / "spearman_results.csv", index=True)
+    # logger.info(f"Spearman correlation results saved to {output_dir / 'spearman_results.csv'}")
 
 if __name__ == "__main__":
     app()
