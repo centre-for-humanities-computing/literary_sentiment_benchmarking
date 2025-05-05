@@ -1,0 +1,6 @@
+text,label,category,tr_xlm_roberta,vader,org_lang,twitter_xlm_roberta_base_sentiment_multilingual
+"Langt ude i havet er vandet så blåt, som bladene på den dejligste kornblomst og så klart, som det reneste glas, men det er meget dybt, dybere end noget ankertov når, mange kirketårne måtte stilles oven på hinanden, for at række fra bunden op over vandet.",6.666666666666667,fairytales,0.0,0.5106,dk,0.4217957854270935
+Dernede bor havfolkene.,5.0,fairytales,0.0,0.0,dk,0.0
+"Nu må man slet ikke tro, at der kun er den nøgne hvide sandbund; nej, der vokser de forunderligste træer og planter, som er så smidige i stilk og blade, at de ved den mindste bevægelse af vandet rører sig, ligesom om de var levende.",6.0,fairytales,0.0,0.7836,dk,0.3586299419403076
+"Alle fiskene, små og store, smutter imellem grenene, ligesom heroppe fuglene i luften.",6.333333333333333,fairytales,0.0,0.3612,dk,0.0
+"På det allerdybeste sted ligger havkongens slot, murene er af koraller og de lange spidse vinduer af det allerklareste rav, men taget er muslingeskaller, der åbner og lukker sig, eftersom vandet går; det ser dejligt ud; thi i hver ligger strålende perler, én eneste ville være stor stads i en dronnings krone.",8.0,fairytales,0.4690128564834595,0.9694,dk,0.8834195733070374

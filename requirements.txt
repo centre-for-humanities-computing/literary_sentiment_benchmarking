@@ -1,0 +1,8 @@
+pandas
+datasets
+transformers
+typer[all]
+loguru
+torch
+tqdm
+scikit-learn

@@ -1,0 +1,9 @@
+2025-05-05T20:15:03.629599+0200 Limiting to first 5 rows for testing.
+2025-05-05T20:15:07.761131+0200 Model cardiffnlp/twitter-xlm-roberta-base-sentiment-multilingual completed.
+2025-05-05T20:15:07.772156+0200 Results saved to results/sentiment_benchmark_results.csv
+2025-05-05T20:42:00.281889+0200 Limiting to first 5 rows for testing.
+2025-05-05T20:42:04.334595+0200 Model cardiffnlp/twitter-xlm-roberta-base-sentiment-multilingual completed.
+2025-05-05T20:42:04.344944+0200 Results saved to results/sentiment_benchmark_results.csv
+2025-05-05T20:47:50.287492+0200 Limiting to first 5 rows for testing.
+2025-05-05T20:47:53.436630+0200 Model cardiffnlp/twitter-xlm-roberta-base-sentiment-multilingual completed.
+2025-05-05T20:47:53.439591+0200 Results saved to results/sentiment_benchmark_results.csv

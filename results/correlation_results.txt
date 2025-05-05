@@ -1,0 +1,3 @@
+Spearman correlation between twitter_xlm_roberta_base_sentiment_multilingual and human labels: 0.8207826816681234
+p-value: 0.08858700531354377
+
