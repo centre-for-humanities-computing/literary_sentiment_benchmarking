@@ -6,7 +6,7 @@
     python -m src.sentiment_benchmarking \
     --model-names cardiffnlp/twitter-xlm-roberta-base-sentiment-multilingual \
     --model-names MiMe-MeMo/MeMo-BERT-SA \
-    --model-names alexandrainst/da-sentiment-base
+    --model-names alexandrainst/da-sentiment-base \
 
     option to add, for testing a number of rows to run, e.g.: ```--n-rows 10``` 
     option to add, for google-translating, ```--translate``` (NB: will be slow going)
@@ -23,7 +23,7 @@
 - computes the spearman correlation of chosen models (+precomputed* vader and roberta_xlm_base) with human gold standard ("label") both on the raw and -- [forthcoming] detrended gold standard (see ```utils.py```)
 
 
-*Note that the precomputed vader & [roberta_xlm_base](https://huggingface.co/cardiffnlp/twitter-xlm-roberta-base-sentiment) were applied to Google-translated sentences. For details, see [our paper here](https://aclanthology.org/2024.wassa-1.15.pdf)
+*Note that the precomputed vader & [roberta_xlm_base](https://huggingface.co/cardiffnlp/twitter-xlm-roberta-base-sentiment) were applied to Google-translated sentences. For details, see [our paper here](https://aclanthology.org/2024.wassa-1.15.pdf) -- these are the baselines to beat.
 
 
 ### What it could do [forthcoming]

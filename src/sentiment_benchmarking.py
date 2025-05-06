@@ -60,7 +60,7 @@ def translate_danish_to_english_in_batches(df: pd.DataFrame, text_col: str = "te
 
     tqdm.write("Translating Danish ('dk') sentences to English in batches...")
     translator = Translator()
-    tqdm.pandas(desc="Translating")
+    tqdm.pandas(desc="Translating batch")
         
     # get rows where the language == Danish
     is_danish = df[lang_col] == 'dk'
@@ -108,74 +108,108 @@ def main(
 
     # option to translate all sentences marked "dk" in org_lang to english w / google translate
     if translate:
+        # Change OUTPUT DIR to "translated" if using translation
+        output_dir = Path("results/translated")
+
         # check if the saved translations already exist
-        if Path(f"results/translated_sents/{dataset_name.split('/')[-1]}_saved_translations.csv").exists():
+        path_to_translations = f"data/{dataset_name.split('/')[-1]}_saved_translations.csv"
+        if Path(path_to_translations).exists():
             # load them
-            df = pd.read_csv(f"results/translated_sents/{dataset_name.split('/')[-1]}_saved_translations.csv")
+            df = pd.read_csv(path_to_translations)
             logger.info("Loaded saved translations.")
         else:
             # translate the sentences
             df = translate_danish_to_english_in_batches(df, text_col='text', lang_col='org_lang')
             # save them
-            df.to_csv(f"results/translated_sents/{dataset_name.split('/')[-1]}_saved_translations.csv", index=False)
+            df.to_csv(path_to_translations, index=False)
             logger.info("Saved translations to CSV.")
-        # change output dir to "translated" if using translation
-        output_dir = Path("results/translated_sents")
 
     # save column names for later
     colnames = []
 
+    # PART I: Run models
     for model_name in model_names:
-        #print(f"\nRunning model: {model_name.upper()}")
         tqdm.write(f"\nRunning model: {model_name.upper()}")
+        # Load the model and tokenizer
         model = pipeline("text-classification", model=model_name)
         tokenizer = AutoTokenizer.from_pretrained(model_name)
-        
+        # get the model name for the column name
         col = model_name.split("/")[-1].replace("-", "_").lower()
+
         try: 
             # Apply sentiment analysis with tqdm for progress bar
             tqdm.pandas(desc=f"Processing {model_name}")  # Set the description for the progress bar
             df[col] = df['text'].progress_apply(lambda x: get_sentiment(x, model=model, tokenizer=tokenizer))
             logger.info(f"Model {model_name} completed.")
             colnames.append(col) # save for later
+            
         except Exception as e:
             tqdm.write(f"Error processing model {model_name}: {e}")
             continue
-
+    
+    # Save the results to a CSV file
     output_dir.mkdir(parents=True, exist_ok=True)  # create directory if it doesn't exist
     output_path = output_dir / f"sentiment_benchmark_results.csv"
     df.to_csv(output_path, index=False)
     print(f"\nSaved results to {output_path}")
     logger.info(f"Results saved to {output_path}")
 
+
+    # PART II: Correlation with human labels
     # Now we compute the spearman correlation with the models
     logger.info("Computing Spearman correlation with human labels...")
+##
+    # Init correlations dictionary
+    spearman_dict = {'overall': {}}
+    if not translate: # then we add the correlations for dk and en separately to check performance
+        spearman_dict.update({'dk': {}, 'en': {}})
 
-    # Dictionary to hold correlation results
-    spearman_dict = {}
+    # Define score columns (plus the precomputed ones)
+    colnames_to_check = colnames + ['vader', 'tr_xlm_roberta']
 
-    for col in colnames + ['vader', 'tr_xlm_roberta']:
+    # Split data if translation is not used
+    df_dk = df[df['org_lang'] == 'dk'] if not translate else df
+    df_en = df[df['org_lang'] == 'en'] if not translate else df
+
+    # Overall correlation (for both cases)
+    spearman_dict['overall'] = {}
+
+    # Compute Spearman correlations for the overall dataset
+    for col in colnames_to_check:
         corr, pval = spearmanr(df[col], df['label'])
-        spearman_dict[col] = {'Spearman': corr, 'p-value': pval}
+        spearman_dict['overall'][col] = {'Spearman': corr, 'p-value': pval}
 
-    # Save to CSV
-    df_spearman = pd.DataFrame.from_dict(spearman_dict, orient='index')
-    df_spearman.to_csv(output_dir / "spearman_results.csv", index_label="Model")
-    logger.info(f"Spearman correlation results saved to {output_dir / 'spearman_results.csv'}")
+    # If translation is not used, calculate correlations for 'dk' and 'en' subsets
+    if not translate:
+        spearman_dict['dk'] = {}
+        spearman_dict['en'] = {}
 
-    # Save to TXT with timestamp in filename
+        # Compute Spearman correlations for the 'dk' subset
+        for col in colnames_to_check:
+            corr, pval = spearmanr(df_dk[col], df_dk['label'])
+            spearman_dict['dk'][col] = {'Spearman': corr, 'p-value': pval}
+
+        # Compute Spearman correlations for the 'en' subset
+        for col in colnames_to_check:
+            corr, pval = spearmanr(df_en[col], df_en['label'])
+            spearman_dict['en'][col] = {'Spearman': corr, 'p-value': pval}
+
+    # Save results to a TXT file w timestamp
     timestamp = datetime.now().strftime("%Y-%m-%d_%H-%M-%S")
     txt_output_path = output_dir / f"{timestamp}_spearman_log.txt"
 
     with open(txt_output_path, "w") as f:
         f.write(f"Spearman correlation results - {timestamp}\n")
         f.write("=" * 40 + "\n")
-        for model, values in spearman_dict.items():
-            f.write(f"{model}:\n")
-            f.write(f"  Spearman: {values['Spearman']:.4f}\n")
-            f.write(f"  p-value : {values['p-value']:.4g}\n\n")
+        # Write results for all sections (overall, dk, en)
+        for lang in ['overall', 'dk', 'en'] if not translate else ['overall']:
+            f.write(f"\n----{lang.capitalize()} Results:\n")
+            for model, values in spearman_dict[lang].items():
+                f.write(f"{model}:\n")
+                f.write(f"  Spearman: {values['Spearman']:.4f}\n")
+                f.write(f"  p-value : {values['p-value']:.4g}\n")
 
-    logger.info(f"Spearman results also written to {txt_output_path}")
+    logger.info(f"Spearman log saved to {txt_output_path}")
 
 if __name__ == "__main__":
     app()
