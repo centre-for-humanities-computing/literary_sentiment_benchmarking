@@ -9,10 +9,10 @@
     --model-names alexandrainst/da-sentiment-base \
 
     option to add, for testing a number of rows to run, e.g.: ```--n-rows 10``` 
+
     option to add, for google-translating, ```--translate``` (NB: will be slow going)
-    (remember \ at end of previous line then). 
     
-    I.e.: script, model_names (can be multiple) and n-rows (optional) and translate (optional)
+    > I.e.: script, model_names (can be multiple) and n-rows (optional) and translate (optional)
 
 - results (csv cols data & spearman results) in ```results``` folder
 
