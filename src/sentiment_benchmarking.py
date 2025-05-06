@@ -94,6 +94,8 @@ def main(
     print(f"Model names: {model_names}")
     logger.info(f"Model names: {model_names}")
 
+    timestamp = datetime.now().strftime("%Y-%m-%d_%H-%M-%S")
+
     # load dataset
     ds = load_dataset(dataset_name)
     df = pd.DataFrame(ds['train'], columns=['text', 'label', 'category', 'tr_xlm_roberta', 'vader', 'org_lang'])
@@ -149,7 +151,7 @@ def main(
     
     # Save the results to a CSV file
     output_dir.mkdir(parents=True, exist_ok=True)  # create directory if it doesn't exist
-    output_path = output_dir / f"sentiment_benchmark_results.csv"
+    output_path = output_dir / f"{dataset_name.split('/')[-1]}_sentiment_benchmark_results.csv"
     df.to_csv(output_path, index=False)
     print(f"\nSaved results to {output_path}")
     logger.info(f"Results saved to {output_path}")
@@ -195,8 +197,7 @@ def main(
             spearman_dict['en'][col] = {'Spearman': corr, 'p-value': pval}
 
     # Save results to a TXT file w timestamp
-    timestamp = datetime.now().strftime("%Y-%m-%d_%H-%M-%S")
-    txt_output_path = output_dir / f"{timestamp}_spearman_log.txt"
+    txt_output_path = output_dir / f"{timestamp}_{dataset_name.split('/')[-1]}_spearman_log.txt"
 
     with open(txt_output_path, "w") as f:
         f.write(f"Spearman correlation results - {timestamp}\n")
