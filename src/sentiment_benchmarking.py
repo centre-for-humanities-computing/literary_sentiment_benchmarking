@@ -1,11 +1,13 @@
 # sentiment_benchmark.py
 
 import pandas as pd
+import numpy as np
 from datasets import load_dataset
 from transformers import pipeline, AutoTokenizer
 import typer
 from loguru import logger
 from datetime import datetime
+import time
 from pathlib import Path
 
 from scipy.stats import spearmanr
@@ -36,6 +38,50 @@ def clean_whitespace(text: str) -> str:
     return text
 
 
+def safe_translate(text, retries=3, delay=5):
+    """ Translate the text with retries in case of errors like timeouts. """
+    translator = Translator()
+    for _ in range(retries):
+        try:
+            return translator.translate(text, src='da', dest='en').text
+        except Exception as e:
+            tqdm.write(f"Translation error: {e}. Retrying...")
+            time.sleep(delay)  # Wait for some time before retrying
+    return text  # return original text after all retries
+
+
+def translate_danish_to_english_in_batches(df: pd.DataFrame, text_col: str = "text", lang_col: str = "org_lang", batch_size: int = 100) -> pd.DataFrame:
+    """
+    Translates Danish text (where lang_col == 'dk') in the specified text column to English in batches.
+    """
+    if lang_col not in df.columns:
+        tqdm.write(f"Warning: '{lang_col}' column not found. Skipping translation.")
+        return df
+
+    tqdm.write("Translating Danish ('dk') sentences to English in batches...")
+    translator = Translator()
+    tqdm.pandas(desc="Translating")
+        
+    # get rows where the language == Danish
+    is_danish = df[lang_col] == 'dk'
+    danish_texts = df.loc[is_danish, text_col]
+
+    # Split texts into batches
+    batches = np.array_split(danish_texts, len(danish_texts) // batch_size + 1)
+    
+    translated_texts = []
+    for batch in tqdm(batches, desc="Processing batches"):
+        # translate each batch
+        translated_batch = batch.progress_apply(safe_translate)
+        translated_texts.extend(translated_batch.tolist())
+
+    # Reassign translated texts back to the DataFrame
+    df.loc[is_danish, text_col] = translated_texts
+    tqdm.write("Translation completed.")
+    
+    return df
+
+
 @app.command()
 def main(
     model_names: List[str] = typer.Option(..., help="List of HuggingFace model names"),
@@ -45,53 +91,56 @@ def main(
     translate: bool = typer.Option(False, help="Translate Danish sentences to English using Google Translate"),
 ):
     # get model names
-    #model_names = model_names.split(",")
     print(f"Model names: {model_names}")
     logger.info(f"Model names: {model_names}")
 
     # load dataset
     ds = load_dataset(dataset_name)
     df = pd.DataFrame(ds['train'], columns=['text', 'label', 'category', 'tr_xlm_roberta', 'vader', 'org_lang'])
-    # clean text
-    df['text'] = df['text'].apply(clean_whitespace)
-
-    # option to translate all sentences marked "dk" in org_lang to english w / google translate
-    if translate:
-        if 'org_lang' not in df.columns:
-            logger.warning("org_lang column not found. Continuing without translation.")
-
-        else:
-            translator = Translator()
-            # Translate only the rows where org_lang is 'dk'
-            logger.info("Translating Danish ('dk') sentences to English...")
-            tqdm.pandas(desc="Translating")
-            df.loc[df['org_lang'] == 'dk', 'text'] = df.loc[df['org_lang'] == 'dk', 'text'].progress_apply(
-                lambda x: translator.translate(x, src='da', dest='en').text)
-            logger.info("Translation completed.")
-        output_dir = Path("results/translated_sents")
 
     # TESTING PURPOSES (number of rows)
     if n_rows:
         df = df.head(n_rows)
         logger.info(f"Limiting to first {n_rows} rows for testing.")
 
+    # clean text
+    df['text'] = df['text'].apply(clean_whitespace)
+
+    # option to translate all sentences marked "dk" in org_lang to english w / google translate
+    if translate:
+        # check if the saved translations already exist
+        if Path(f"results/translated_sents/{dataset_name.split('/')[-1]}_saved_translations.csv").exists():
+            # load them
+            df = pd.read_csv(f"results/translated_sents/{dataset_name.split('/')[-1]}_saved_translations.csv")
+            logger.info("Loaded saved translations.")
+        else:
+            # translate the sentences
+            df = translate_danish_to_english_in_batches(df, text_col='text', lang_col='org_lang')
+            # save them
+            df.to_csv(f"results/translated_sents/{dataset_name.split('/')[-1]}_saved_translations.csv", index=False)
+            logger.info("Saved translations to CSV.")
+        # change output dir to "translated" if using translation
+        output_dir = Path("results/translated_sents")
+
     # save column names for later
     colnames = []
 
     for model_name in model_names:
-        print(f"\nRunning model: {model_name.upper()}")
+        #print(f"\nRunning model: {model_name.upper()}")
+        tqdm.write(f"\nRunning model: {model_name.upper()}")
         model = pipeline("text-classification", model=model_name)
         tokenizer = AutoTokenizer.from_pretrained(model_name)
-
-        col = model_name.split("/")[-1].replace("-", "_").lower()
-        colnames.append(col) # save for later
         
-        # Apply sentiment analysis with tqdm for progress bar
-        tqdm.pandas(desc=f"Processing {model_name}")  # Set the description for the progress bar
-        df[col] = df['text'].progress_apply(lambda x: get_sentiment(x, model=model, tokenizer=tokenizer))
-
-        print(df[col].describe())
-        logger.info(f"Model {model_name} completed.")
+        col = model_name.split("/")[-1].replace("-", "_").lower()
+        try: 
+            # Apply sentiment analysis with tqdm for progress bar
+            tqdm.pandas(desc=f"Processing {model_name}")  # Set the description for the progress bar
+            df[col] = df['text'].progress_apply(lambda x: get_sentiment(x, model=model, tokenizer=tokenizer))
+            logger.info(f"Model {model_name} completed.")
+            colnames.append(col) # save for later
+        except Exception as e:
+            tqdm.write(f"Error processing model {model_name}: {e}")
+            continue
 
     output_dir.mkdir(parents=True, exist_ok=True)  # create directory if it doesn't exist
     output_path = output_dir / f"sentiment_benchmark_results.csv"
