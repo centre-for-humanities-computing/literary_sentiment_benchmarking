@@ -98,7 +98,7 @@ def main(
 
     # load dataset
     ds = load_dataset(dataset_name)
-    df = pd.DataFrame(ds['train'], columns=['text', 'label', 'category', 'tr_xlm_roberta', 'vader', 'org_lang'])
+    df = pd.DataFrame(ds['train'], columns=['text', 'label', 'category', 'vader', 'org_lang'])
 
     # TESTING PURPOSES (number of rows)
     if n_rows:
@@ -141,7 +141,7 @@ def main(
         try: 
             # Apply sentiment analysis with tqdm for progress bar
             tqdm.pandas(desc=f"Processing {model_name}")  # Set the description for the progress bar
-            df[col] = df['text'].progress_apply(lambda x: get_sentiment(x, model=model, tokenizer=tokenizer))
+            df[col] = df['text'].progress_apply(lambda x: get_sentiment(x, model=model, tokenizer=tokenizer, model_name=model_name))
             logger.info(f"Model {model_name} completed.")
             colnames.append(col) # save for later
             
@@ -167,7 +167,7 @@ def main(
     spearman_dict.update({'dk': {}, 'en': {}})
 
     # Define score columns (plus the precomputed ones)
-    colnames_to_check = colnames + ['vader', 'tr_xlm_roberta']
+    colnames_to_check = colnames + ['vader']
 
     # Split data if translation is not used
     df_dk = df[df['org_lang'] == 'dk']

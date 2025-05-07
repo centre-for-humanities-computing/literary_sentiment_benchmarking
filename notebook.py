@@ -24,15 +24,16 @@ from utils import get_sentiment
 models = {"roberta_base_multilingual": "cardiffnlp/twitter-xlm-roberta-base-sentiment-multilingual",
           "roberta_base_xlm": "cardiffnlp/xlm-roberta-base-sentiment-multilingual",
           "mimememo_sentiment": "MiMe-MeMo/MeMo-BERT-SA",
+          "danishsentiment": "vesteinn/danish_sentiment"
           }
 
 # test getting sentiment with memo
-model = models["roberta_base_xlm"]
+model = models["danishsentiment"]
 tokenizer = AutoTokenizer.from_pretrained(model)
 sentiment = pipeline("text-classification", model=model)
 
-text = "Min moster hader mig."
-print(get_sentiment(text, sentiment, tokenizer))
+text = "a a a a"
+sentiment(text)
 
 
 # %%
@@ -107,4 +108,11 @@ for text in df_dk['text']:
     print(translated.text)
 # %%
 df_dk
+# %%
+from danlp.datasets import EuroparlSentiment1
+eurosent = EuroparlSentiment1()
+
+df = eurosent.load_with_pandas()
+print(len(df))
+df
 # %%

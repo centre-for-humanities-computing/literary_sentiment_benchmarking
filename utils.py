@@ -72,10 +72,14 @@ def split_long_sentence(text, tokenizer) -> list:
 
 
 # get SA scores from xlm-roberta
-def get_sentiment(text, model, tokenizer):
+def get_sentiment(text, model, tokenizer, model_name):
     """
     Gets the sentiment score for a given text, including splitting long sentences into chunks if needed.
     """
+    if model_name == "vesteinn/danish_sentiment":
+        spec_labs = ["positiv", "neutral", "negativ"]  # labels for the model
+    else:
+        spec_labs = ["positive", "neutral", "negative"]  # labels for the model
 
     # Check that the text is a string
     if not isinstance(text, str):
@@ -108,7 +112,7 @@ def get_sentiment(text, model, tokenizer):
         xlm_score = sent[0].get("score")
 
         # Transform score to continuous scale
-        xlm_converted_score = conv_scores(xlm_label, xlm_score, ["positive", "neutral", "negative"])
+        xlm_converted_score = conv_scores(xlm_label, xlm_score, spec_lab=spec_labs)
         # make sure the score is a float
         xlm_converted_score = float(xlm_converted_score)
         sentiment_scores.append(xlm_converted_score)

@@ -8,6 +8,7 @@
     --model-names cardiffnlp/xlm-roberta-base-sentiment-multilingual \
     --model-names MiMe-MeMo/MeMo-BERT-SA \
     --model-names alexandrainst/da-sentiment-base \
+    --model-names vesteinn/danish_sentiment
 
     option to add, for testing a number of rows to run, e.g.: ```--n-rows 10``` 
 

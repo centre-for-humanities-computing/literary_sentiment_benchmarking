@@ -47,3 +47,36 @@
 2025-05-06T22:18:25.909239+0200 Results saved to results/fiction4sentiment_sentiment_benchmark_results.csv
 2025-05-06T22:18:25.909337+0200 Computing Spearman correlation with human labels...
 2025-05-06T22:18:25.932420+0200 Spearman log saved to results/2025-05-06_22-13-21_fiction4sentiment_spearman_log.txt
+2025-05-07T23:34:57.398471+0200 Model names: ['cardiffnlp/twitter-xlm-roberta-base-sentiment-multilingual', 'cardiffnlp/xlm-roberta-base-sentiment-multilingual', 'MiMe-MeMo/MeMo-BERT-SA', 'alexandrainst/da-sentiment-base', 'vesteinn/danish_sentiment']
+2025-05-07T23:36:36.078363+0200 Model cardiffnlp/twitter-xlm-roberta-base-sentiment-multilingual completed.
+2025-05-07T23:37:50.683411+0200 Model cardiffnlp/xlm-roberta-base-sentiment-multilingual completed.
+2025-05-07T23:39:02.773070+0200 Model MiMe-MeMo/MeMo-BERT-SA completed.
+2025-05-07T23:40:06.041999+0200 Model alexandrainst/da-sentiment-base completed.
+2025-05-07T23:42:14.374435+0200 Results saved to results/fiction4sentiment_sentiment_benchmark_results.csv
+2025-05-07T23:42:14.374850+0200 Computing Spearman correlation with human labels...
+2025-05-07T23:42:14.501395+0200 Spearman log saved to results/2025-05-07_23-34-57_fiction4sentiment_spearman_log.txt
+2025-05-07T23:57:09.253639+0200 Model names: ['cardiffnlp/twitter-xlm-roberta-base-sentiment-multilingual', 'cardiffnlp/xlm-roberta-base-sentiment-multilingual', 'MiMe-MeMo/MeMo-BERT-SA', 'alexandrainst/da-sentiment-base', 'vesteinn/danish_sentiment']
+2025-05-07T23:58:37.960910+0200 Model cardiffnlp/twitter-xlm-roberta-base-sentiment-multilingual completed.
+2025-05-08T00:00:00.603931+0200 Model cardiffnlp/xlm-roberta-base-sentiment-multilingual completed.
+2025-05-08T00:01:15.864022+0200 Model MiMe-MeMo/MeMo-BERT-SA completed.
+2025-05-08T00:02:19.809557+0200 Model alexandrainst/da-sentiment-base completed.
+2025-05-08T00:02:22.947692+0200 Results saved to results/fiction4sentiment_sentiment_benchmark_results.csv
+2025-05-08T00:02:22.947804+0200 Computing Spearman correlation with human labels...
+2025-05-08T00:07:10.660873+0200 Model names: ['cardiffnlp/twitter-xlm-roberta-base-sentiment-multilingual', 'cardiffnlp/xlm-roberta-base-sentiment-multilingual', 'MiMe-MeMo/MeMo-BERT-SA', 'alexandrainst/da-sentiment-base', 'vesteinn/danish_sentiment']
+2025-05-08T00:08:34.774644+0200 Model cardiffnlp/twitter-xlm-roberta-base-sentiment-multilingual completed.
+2025-05-08T00:10:00.356871+0200 Model cardiffnlp/xlm-roberta-base-sentiment-multilingual completed.
+2025-05-08T00:11:44.021470+0200 Model MiMe-MeMo/MeMo-BERT-SA completed.
+2025-05-08T00:13:02.189421+0200 Model alexandrainst/da-sentiment-base completed.
+2025-05-08T00:14:45.605642+0200 Model vesteinn/danish_sentiment completed.
+2025-05-08T00:14:45.683318+0200 Results saved to results/fiction4sentiment_sentiment_benchmark_results.csv
+2025-05-08T00:14:45.683444+0200 Computing Spearman correlation with human labels...
+2025-05-08T00:14:45.961407+0200 Spearman log saved to results/2025-05-08_00-07-10_fiction4sentiment_spearman_log.txt
+2025-05-08T00:18:09.151224+0200 Model names: ['cardiffnlp/twitter-xlm-roberta-base-sentiment-multilingual', 'cardiffnlp/xlm-roberta-base-sentiment-multilingual', 'MiMe-MeMo/MeMo-BERT-SA', 'alexandrainst/da-sentiment-base', 'vesteinn/danish_sentiment']
+2025-05-08T00:19:51.026157+0200 Model cardiffnlp/twitter-xlm-roberta-base-sentiment-multilingual completed.
+2025-05-08T00:21:13.257149+0200 Model cardiffnlp/xlm-roberta-base-sentiment-multilingual completed.
+2025-05-08T00:22:31.718840+0200 Model MiMe-MeMo/MeMo-BERT-SA completed.
+2025-05-08T00:23:39.692067+0200 Model alexandrainst/da-sentiment-base completed.
+2025-05-08T00:24:53.498023+0200 Model vesteinn/danish_sentiment completed.
+2025-05-08T00:24:53.544880+0200 Results saved to results/fiction4sentiment_sentiment_benchmark_results.csv
+2025-05-08T00:24:53.544977+0200 Computing Spearman correlation with human labels...
+2025-05-08T00:24:53.717222+0200 Spearman log saved to results/2025-05-08_00-18-09_fiction4sentiment_spearman_log.txt
