@@ -163,15 +163,15 @@ def main(
 ##
     # Init correlations dictionary
     spearman_dict = {'overall': {}}
-    if not translate: # then we add the correlations for dk and en separately to check performance
-        spearman_dict.update({'dk': {}, 'en': {}})
+    #if not translate: # then we add the correlations for dk and en separately to check performance
+    spearman_dict.update({'dk': {}, 'en': {}})
 
     # Define score columns (plus the precomputed ones)
     colnames_to_check = colnames + ['vader', 'tr_xlm_roberta']
 
     # Split data if translation is not used
-    df_dk = df[df['org_lang'] == 'dk'] if not translate else df
-    df_en = df[df['org_lang'] == 'en'] if not translate else df
+    df_dk = df[df['org_lang'] == 'dk']
+    df_en = df[df['org_lang'] == 'en']
 
     # Overall correlation (for both cases)
     spearman_dict['overall'] = {}
@@ -182,19 +182,18 @@ def main(
         spearman_dict['overall'][col] = {'Spearman': corr, 'p-value': pval}
 
     # If translation is not used, calculate correlations for 'dk' and 'en' subsets
-    if not translate:
-        spearman_dict['dk'] = {}
-        spearman_dict['en'] = {}
+    spearman_dict['dk'] = {}
+    spearman_dict['en'] = {}
 
-        # Compute Spearman correlations for the 'dk' subset
-        for col in colnames_to_check:
-            corr, pval = spearmanr(df_dk[col], df_dk['label'])
-            spearman_dict['dk'][col] = {'Spearman': corr, 'p-value': pval}
+    # Compute Spearman correlations for the 'dk' subset
+    for col in colnames_to_check:
+        corr, pval = spearmanr(df_dk[col], df_dk['label'])
+        spearman_dict['dk'][col] = {'Spearman': corr, 'p-value': pval}
 
-        # Compute Spearman correlations for the 'en' subset
-        for col in colnames_to_check:
-            corr, pval = spearmanr(df_en[col], df_en['label'])
-            spearman_dict['en'][col] = {'Spearman': corr, 'p-value': pval}
+    # Compute Spearman correlations for the 'en' subset
+    for col in colnames_to_check:
+        corr, pval = spearmanr(df_en[col], df_en['label'])
+        spearman_dict['en'][col] = {'Spearman': corr, 'p-value': pval}
 
     # Save results to a TXT file w timestamp
     txt_output_path = output_dir / f"{timestamp}_{dataset_name.split('/')[-1]}_spearman_log.txt"
@@ -203,7 +202,7 @@ def main(
         f.write(f"Spearman correlation results - {timestamp}\n")
         f.write("=" * 40 + "\n")
         # Write results for all sections (overall, dk, en)
-        for lang in ['overall', 'dk', 'en'] if not translate else ['overall']:
+        for lang in ['overall', 'dk', 'en']:
             f.write(f"\n----{lang.capitalize()} Results:\n")
             for model, values in spearman_dict[lang].items():
                 f.write(f"{model}:\n")

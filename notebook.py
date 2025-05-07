@@ -5,6 +5,16 @@ from datasets import load_dataset
 from transformers import pipeline, AutoTokenizer
 from loguru import logger
 
+# set to current directory
+import os
+os.chdir(os.path.dirname(os.path.abspath(__file__)))
+#check dir
+print(os.getcwd())
+# set dir to parent directory
+os.chdir("..")
+# check dir
+print(os.getcwd())
+
 from utils import get_sentiment
 
 # %%
@@ -12,11 +22,12 @@ from utils import get_sentiment
 # TEST SENTIMENT MODELS OUT
 
 models = {"roberta_base_multilingual": "cardiffnlp/twitter-xlm-roberta-base-sentiment-multilingual",
+          "roberta_base_xlm": "cardiffnlp/xlm-roberta-base-sentiment-multilingual",
           "mimememo_sentiment": "MiMe-MeMo/MeMo-BERT-SA",
           }
 
 # test getting sentiment with memo
-model = models["roberta_base_multilingual"]
+model = models["roberta_base_xlm"]
 tokenizer = AutoTokenizer.from_pretrained(model)
 sentiment = pipeline("text-classification", model=model)
 

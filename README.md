@@ -5,6 +5,7 @@
 
     python -m src.sentiment_benchmarking \
     --model-names cardiffnlp/twitter-xlm-roberta-base-sentiment-multilingual \
+    --model-names cardiffnlp/xlm-roberta-base-sentiment-multilingual \
     --model-names MiMe-MeMo/MeMo-BERT-SA \
     --model-names alexandrainst/da-sentiment-base \
 
