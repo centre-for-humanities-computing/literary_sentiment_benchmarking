@@ -10,11 +10,12 @@ import os
 os.chdir(os.path.dirname(os.path.abspath(__file__)))
 #check dir
 print(os.getcwd())
-# set dir to parent directory
-os.chdir("..")
-# check dir
-print(os.getcwd())
+# # set dir to parent directory
+# os.chdir("..")
+# # check dir
+# print(os.getcwd())
 
+# %%
 from utils import get_sentiment
 
 # %%
@@ -28,13 +29,26 @@ models = {"roberta_base_multilingual": "cardiffnlp/twitter-xlm-roberta-base-sent
           }
 
 # test getting sentiment with memo
-model = models["danishsentiment"]
+model = models["mimememo_sentiment"]
 tokenizer = AutoTokenizer.from_pretrained(model)
 sentiment = pipeline("text-classification", model=model)
 
-text = "a a a a"
-sentiment(text)
+text = "det er forfærdeligt"
+sent = sentiment(text)
+xlm_label = sent[0].get("label")
+xlm_score = sent[0].get("score")
+print(xlm_label)
+print(xlm_score)
+# %%
+sent
+# %%
+from utils import get_model_labels
 
+labels = get_model_labels(sentiment)
+print(labels)
+# %%
+sent = get_sentiment(text, sentiment, tokenizer, model)
+print(sent)
 
 # %%
 

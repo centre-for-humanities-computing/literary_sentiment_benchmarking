@@ -3,28 +3,34 @@ from loguru import logger
 
 # SA functions
 
-# to convert transformer scores to the same scale as the dictionary-based scores
-def conv_scores(label, score, spec_lab):  # single label and score
-    """
-    Converts transformer-based sentiment scores to a uniform scale based on specified labels.
-    We need to lowercase since sometimes, a model will have as label "Neutral" or "neutral" or "NEUTRAL"
-    """
-    if len(spec_lab) == 2:
-        if label.lower() == spec_lab[0]:  # "positive"
-            return score
-        elif label.lower() == spec_lab[1]:  # "negative"
-            return -score  # return negative score
+# conversion of label+scores to continuous scale
+# this will need to be updated sometimes (depending on the model used, it might have unreasonable names for the labels)
+LABEL_NORMALIZATION = { 
+    "positive": {"positive", "positiv", "pos"},
+    "neutral": {"neutral", "neutr", "neut"},
+    "negative": {"negative", "negativ", "neg"},}
 
-    elif len(spec_lab) == 3:
-        if label.lower() == spec_lab[0]:  # "positive"
-            return score
-        elif label.lower() == spec_lab[1]:  # "neutral"
-            return 0  # return 0 for neutral
-        elif label.lower() == spec_lab[2]:  # "negative"
-            return -score  # return negative score
+def normalize_label(label):
+    """
+    Normalizes the model's sentiment label to a standard format.
+    """
+    label = label.lower().strip() # make sure we have a clean label
+    for standard_label, variants in LABEL_NORMALIZATION.items():
+        if label in variants:
+            return standard_label
+    raise ValueError(f"Unrecognized sentiment label: {label}")
 
-    else:
-        raise ValueError("spec_lab must contain either 2 or 3 labels.")
+def conv_scores(label, score):
+    """
+    Converts the sentiment score to a continuous scale based on (normalized) label.
+    """
+    sentiment = normalize_label(label)
+    if sentiment == "positive":
+        return score
+    elif sentiment == "neutral":
+        return 0
+    elif sentiment == "negative":
+        return -score
 
 
 # Function to find the maximum allowed tokens for the model
@@ -72,14 +78,12 @@ def split_long_sentence(text, tokenizer) -> list:
 
 
 # get SA scores from xlm-roberta
-def get_sentiment(text, model, tokenizer, model_name):
+def get_sentiment(text, pipe, tokenizer, model_name):
     """
     Gets the sentiment score for a given text, including splitting long sentences into chunks if needed.
     """
-    if model_name == "vesteinn/danish_sentiment":
-        spec_labs = ["positiv", "neutral", "negativ"]  # labels for the model
-    else:
-        spec_labs = ["positive", "neutral", "negative"]  # labels for the model
+    
+    #spec_labs = get_model_labels(pipe)  # labels for the model
 
     # Check that the text is a string
     if not isinstance(text, str):
@@ -89,16 +93,16 @@ def get_sentiment(text, model, tokenizer, model_name):
     # Split the sentence into chunks if it's too long
     chunks = split_long_sentence(text, tokenizer)
 
-    if len(chunks) == 0:
+    if not chunks:
         print(f"Warning: No chunks created for text: '{text}'. Skipping.")
         return None
 
-    elif len(chunks) == 1:
-        # If the sentence is short enough, just use it as is
-        chunks = [text]
+    # If there is only one chunk, we can directly use the original text
+    if len(chunks) == 1:
+        chunks = [text]  # Just use the original text
 
-    else:
-        # If the sentence is split into chunks, print a warning
+    # If the sentence is split into multiple chunks, print a warning
+    elif len(chunks) > 1:
         print(f"Warning: Sentence split into {len(chunks)} chunks for text: '{text}'.")
         logger.info(f"Sentence split into {len(chunks)} chunks for text: '{text}'.")
 
@@ -107,14 +111,12 @@ def get_sentiment(text, model, tokenizer, model_name):
 
     for chunk in chunks:
         # Get sentiment from the model
-        sent = model(chunk)
+        sent = pipe(chunk)
         xlm_label = sent[0].get("label")
         xlm_score = sent[0].get("score")
 
         # Transform score to continuous scale
-        xlm_converted_score = conv_scores(xlm_label, xlm_score, spec_lab=spec_labs)
-        # make sure the score is a float
-        xlm_converted_score = float(xlm_converted_score)
+        xlm_converted_score = float(conv_scores(xlm_label, xlm_score))
         sentiment_scores.append(xlm_converted_score)
 
     # Calculate the mean sentiment score from the chunks

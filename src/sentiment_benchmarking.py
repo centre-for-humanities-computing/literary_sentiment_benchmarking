@@ -133,15 +133,17 @@ def main(
     for model_name in model_names:
         tqdm.write(f"\nRunning model: {model_name.upper()}")
         # Load the model and tokenizer
-        model = pipeline("text-classification", model=model_name)
+        pipe = pipeline("text-classification", model=model_name)
         tokenizer = AutoTokenizer.from_pretrained(model_name)
+        # get the labels from config
+
         # get the model name for the column name
         col = model_name.split("/")[-1].replace("-", "_").lower()
 
         try: 
             # Apply sentiment analysis with tqdm for progress bar
             tqdm.pandas(desc=f"Processing {model_name}")  # Set the description for the progress bar
-            df[col] = df['text'].progress_apply(lambda x: get_sentiment(x, model=model, tokenizer=tokenizer, model_name=model_name))
+            df[col] = df['text'].progress_apply(lambda x: get_sentiment(x, pipe=pipe, tokenizer=tokenizer, model_name=model_name))
             logger.info(f"Model {model_name} completed.")
             colnames.append(col) # save for later
             
@@ -160,11 +162,6 @@ def main(
     # PART II: Correlation with human labels
     # Now we compute the spearman correlation with the models
     logger.info("Computing Spearman correlation with human labels...")
-##
-    # Init correlations dictionary
-    spearman_dict = {'overall': {}}
-    #if not translate: # then we add the correlations for dk and en separately to check performance
-    spearman_dict.update({'dk': {}, 'en': {}})
 
     # Define score columns (plus the precomputed ones)
     colnames_to_check = colnames + ['vader']
@@ -173,17 +170,13 @@ def main(
     df_dk = df[df['org_lang'] == 'dk']
     df_en = df[df['org_lang'] == 'en']
 
-    # Overall correlation (for both cases)
-    spearman_dict['overall'] = {}
+    # Init correlations dictionary
+    spearman_dict = {lang: {} for lang in ['overall', 'dk', 'en']}
 
     # Compute Spearman correlations for the overall dataset
     for col in colnames_to_check:
         corr, pval = spearmanr(df[col], df['label'])
         spearman_dict['overall'][col] = {'Spearman': corr, 'p-value': pval}
-
-    # If translation is not used, calculate correlations for 'dk' and 'en' subsets
-    spearman_dict['dk'] = {}
-    spearman_dict['en'] = {}
 
     # Compute Spearman correlations for the 'dk' subset
     for col in colnames_to_check:

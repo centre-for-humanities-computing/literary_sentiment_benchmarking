@@ -1,0 +1,17 @@
+Spearman correlation results - 2025-05-08_11-57-32
+========================================
+
+----Overall Results:
+vader:
+  Spearman: 0.5142
+  p-value : 0
+
+----Dk Results:
+vader:
+  Spearman: 0.5443
+  p-value : 1.44e-215
+
+----En Results:
+vader:
+  Spearman: 0.4462
+  p-value : 5.456e-171
