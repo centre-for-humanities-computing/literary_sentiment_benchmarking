@@ -1,5 +1,6 @@
 # General
 from loguru import logger
+import numpy as np
 
 # SA functions
 
@@ -112,12 +113,12 @@ def get_sentiment(text, pipe, tokenizer, model_name):
     for chunk in chunks:
         # Get sentiment from the model
         sent = pipe(chunk)
-        xlm_label = sent[0].get("label")
-        xlm_score = sent[0].get("score")
+        model_label = sent[0].get("label")
+        model_score = sent[0].get("score")
 
         # Transform score to continuous scale
-        xlm_converted_score = float(conv_scores(xlm_label, xlm_score))
-        sentiment_scores.append(xlm_converted_score)
+        converted_score = float(conv_scores(model_label, model_score))
+        sentiment_scores.append(converted_score)
 
     # Calculate the mean sentiment score from the chunks
     mean_score = sum(sentiment_scores) / len(sentiment_scores)
