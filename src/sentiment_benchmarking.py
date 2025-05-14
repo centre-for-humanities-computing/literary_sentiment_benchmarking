@@ -161,20 +161,6 @@ def main(
 
     # PART II: Correlation with human labels
 
-    ### added ###
-    # scalin the converted scores to more "even" distribution
-    def scale_converted_scores(score):
-        """
-        Uses tanh to compress extreme confidence and center the scale more evenly.
-        """
-        return np.round(np.tanh(1 * score),2)
-    
-    # convert the scores of all colnames
-    for col in colnames:
-        df[col] = df[col].apply(scale_converted_scores)
-    # we should think about whether we want to do this at all! (doesnt change as now, perhaps slight improvement)
-    ###    ####
-
     # Now we compute the spearman correlation with the models
     logger.info("Computing Spearman correlation with human labels...")
 

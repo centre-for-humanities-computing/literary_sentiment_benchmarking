@@ -118,3 +118,8 @@
 2025-05-13T15:03:45.889426+0200 Results saved to results/fiction4sentiment_sentiment_benchmark_results.csv
 2025-05-13T15:03:45.924277+0200 Computing Spearman correlation with human labels...
 2025-05-13T15:03:45.938285+0200 Spearman log saved to results/2025-05-13_14-59-53_fiction4sentiment_spearman_log.txt
+2025-05-13T19:26:43.150226+0200 Model names: ['cardiffnlp/twitter-xlm-roberta-base-sentiment-multilingual']
+2025-05-13T19:28:04.783897+0200 Model cardiffnlp/twitter-xlm-roberta-base-sentiment-multilingual completed.
+2025-05-13T19:28:04.816193+0200 Results saved to results/fiction4sentiment_sentiment_benchmark_results.csv
+2025-05-13T19:28:04.819470+0200 Computing Spearman correlation with human labels...
+2025-05-13T19:28:04.829616+0200 Spearman log saved to results/2025-05-13_19-26-43_fiction4sentiment_spearman_log.txt
