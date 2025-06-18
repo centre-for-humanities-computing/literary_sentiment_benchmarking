@@ -1,0 +1,12 @@
+Spearman correlation results - 2025-06-10_14-53-45
+========================================
+twitter_xlm_roberta_base_sentiment_multilingual:
+  Spearman: nan
+  p-value : nan
+  Pearson: nan
+  Pearson p-value: nan
+xlm_roberta_base_sentiment_multilingual:
+  Spearman: nan
+  p-value : nan
+  Pearson: nan
+  Pearson p-value: nan

@@ -1,0 +1,12 @@
+Spearman correlation results - 2025-06-13_12-45-41
+========================================
+twitter_xlm_roberta_base_sentiment_multilingual:
+  Spearman: 0.6406
+  p-value : 0
+  Pearson: 0.6346
+  Pearson p-value: 0
+xlm_roberta_base_sentiment_multilingual:
+  Spearman: 0.6452
+  p-value : 0
+  Pearson: 0.6291
+  Pearson p-value: 0

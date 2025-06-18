@@ -1,0 +1,72 @@
+Spearman correlation results - 2025-06-13_13-20-27
+========================================
+twitter_xlm_roberta_base_sentiment_multilingual_letters:
+  Spearman: 0.6854
+  p-value : 1.284e-196
+  Pearson: 0.6888
+  Pearson p-value: 2.382e-199
+twitter_xlm_roberta_base_sentiment_multilingual_newspaper:
+  Spearman: 0.6109
+  p-value : 3.052e-135
+  Pearson: 0.6089
+  Pearson p-value: 3.856e-134
+twitter_xlm_roberta_base_sentiment_multilingual_essays:
+  Spearman: 0.5873
+  p-value : 3.267e-106
+  Pearson: 0.5809
+  Pearson p-value: 2.114e-103
+twitter_xlm_roberta_base_sentiment_multilingual_blog:
+  Spearman: 0.6529
+  p-value : 3.734e-163
+  Pearson: 0.6384
+  Pearson p-value: 7.242e-154
+twitter_xlm_roberta_base_sentiment_multilingual_travel-guides:
+  Spearman: 0.4820
+  p-value : 1.202e-54
+  Pearson: 0.4905
+  Pearson p-value: 8.431e-57
+twitter_xlm_roberta_base_sentiment_multilingual_fiction:
+  Spearman: 0.5722
+  p-value : 3.483e-239
+  Pearson: 0.5994
+  Pearson p-value: 4.097e-268
+twitter_xlm_roberta_base_sentiment_multilingual:
+  Spearman: 0.6406
+  p-value : 0
+  Pearson: 0.6346
+  Pearson p-value: 0
+xlm_roberta_base_sentiment_multilingual_letters:
+  Spearman: 0.6835
+  p-value : 4.305e-195
+  Pearson: 0.6797
+  Pearson p-value: 3.426e-192
+xlm_roberta_base_sentiment_multilingual_newspaper:
+  Spearman: 0.6514
+  p-value : 1.644e-159
+  Pearson: 0.6301
+  Pearson p-value: 2.649e-146
+xlm_roberta_base_sentiment_multilingual_essays:
+  Spearman: 0.5823
+  p-value : 5.064e-104
+  Pearson: 0.5570
+  Pearson p-value: 1.776e-93
+xlm_roberta_base_sentiment_multilingual_blog:
+  Spearman: 0.6517
+  p-value : 2.262e-162
+  Pearson: 0.6342
+  Pearson p-value: 3.35e-151
+xlm_roberta_base_sentiment_multilingual_travel-guides:
+  Spearman: 0.4895
+  p-value : 1.566e-56
+  Pearson: 0.5043
+  Pearson p-value: 1.933e-60
+xlm_roberta_base_sentiment_multilingual_fiction:
+  Spearman: 0.5643
+  p-value : 3.427e-231
+  Pearson: 0.5779
+  Pearson p-value: 4.776e-245
+xlm_roberta_base_sentiment_multilingual:
+  Spearman: 0.6452
+  p-value : 0
+  Pearson: 0.6291
+  Pearson p-value: 0

@@ -123,3 +123,31 @@
 2025-05-13T19:28:04.816193+0200 Results saved to results/fiction4sentiment_sentiment_benchmark_results.csv
 2025-05-13T19:28:04.819470+0200 Computing Spearman correlation with human labels...
 2025-05-13T19:28:04.829616+0200 Spearman log saved to results/2025-05-13_19-26-43_fiction4sentiment_spearman_log.txt
+2025-06-10T14:44:34.594286+0200 Model names: ['cardiffnlp/twitter-xlm-roberta-base-sentiment-multilingual', 'cardiffnlp/xlm-roberta-base-sentiment-multilingual']
+2025-06-10T14:45:20.881822+0200 Model names: ['cardiffnlp/twitter-xlm-roberta-base-sentiment-multilingual', 'cardiffnlp/xlm-roberta-base-sentiment-multilingual']
+2025-06-10T14:47:07.877032+0200 Model names: ['cardiffnlp/twitter-xlm-roberta-base-sentiment-multilingual', 'cardiffnlp/xlm-roberta-base-sentiment-multilingual']
+2025-06-10T14:47:10.845435+0200 Expected string, got <class 'NoneType'>. Returning original text.
+2025-06-10T14:50:11.877847+0200 Model cardiffnlp/twitter-xlm-roberta-base-sentiment-multilingual completed.
+2025-06-10T14:53:45.839865+0200 Model names: ['cardiffnlp/twitter-xlm-roberta-base-sentiment-multilingual', 'cardiffnlp/xlm-roberta-base-sentiment-multilingual']
+2025-06-10T14:53:48.679813+0200 Expected string, got <class 'NoneType'>. Returning original text.
+2025-06-10T14:57:24.496828+0200 Model cardiffnlp/twitter-xlm-roberta-base-sentiment-multilingual completed.
+2025-06-10T15:00:11.941466+0200 Model cardiffnlp/xlm-roberta-base-sentiment-multilingual completed.
+2025-06-10T15:00:11.981626+0200 Results saved to results/Fiction4EmoBank_sentiment_benchmark_results.csv
+2025-06-10T15:00:11.981743+0200 Computing Spearman correlation with human labels...
+2025-06-10T15:00:11.985576+0200 Spearman log saved to results/2025-06-10_14-53-45_Fiction4EmoBank_spearman_log.txt
+2025-06-13T12:45:41.797387+0200 Model names: ['cardiffnlp/twitter-xlm-roberta-base-sentiment-multilingual', 'cardiffnlp/xlm-roberta-base-sentiment-multilingual']
+2025-06-13T12:45:46.554476+0200 Expected string, got <class 'NoneType'>. Returning original text.
+2025-06-13T12:50:55.340037+0200 Model cardiffnlp/twitter-xlm-roberta-base-sentiment-multilingual completed.
+2025-06-13T12:54:05.052724+0200 Model cardiffnlp/xlm-roberta-base-sentiment-multilingual completed.
+2025-06-13T12:54:05.095413+0200 Results saved to results/Fiction4EmoBank_sentiment_benchmark_results.csv
+2025-06-13T12:54:05.095502+0200 Computing Spearman correlation with human labels...
+2025-06-13T12:54:05.099568+0200 Initial rows: 8870, Final rows after dropping NaNs: 8869
+2025-06-13T12:54:05.107379+0200 Spearman log saved to results/2025-06-13_12-45-41_Fiction4EmoBank_spearman_log.txt
+2025-06-13T13:20:27.300351+0200 Model names: ['cardiffnlp/twitter-xlm-roberta-base-sentiment-multilingual', 'cardiffnlp/xlm-roberta-base-sentiment-multilingual']
+2025-06-13T13:20:30.683845+0200 Expected string, got <class 'NoneType'>. Returning original text.
+2025-06-13T13:23:18.460372+0200 Model cardiffnlp/twitter-xlm-roberta-base-sentiment-multilingual completed.
+2025-06-13T13:26:40.893692+0200 Model cardiffnlp/xlm-roberta-base-sentiment-multilingual completed.
+2025-06-13T13:26:40.947046+0200 Results saved to results/Fiction4EmoBank_sentiment_benchmark_results.csv
+2025-06-13T13:26:40.947147+0200 Computing Spearman correlation with human labels...
+2025-06-13T13:26:40.949617+0200 Initial rows: 8870, Final rows after dropping NaNs: 8869
+2025-06-13T13:26:40.967684+0200 Spearman log saved to results/2025-06-13_13-20-27_Fiction4EmoBank_spearman_log.txt

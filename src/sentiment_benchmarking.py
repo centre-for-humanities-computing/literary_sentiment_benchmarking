@@ -11,6 +11,7 @@ import time
 from pathlib import Path
 
 from scipy.stats import spearmanr
+from scipy.stats import pearsonr
 
 from typing import List, Optional
 from utils import get_sentiment
@@ -25,6 +26,10 @@ logger.add("sentiment.log", format="{time} {message}")
 
 
 def clean_whitespace(text: str) -> str:
+    # check if text is a string
+    if not isinstance(text, str):
+        logger.warning(f"Expected string, got {type(text)}. Returning original text.")
+        return text
     # rm newline characters
     text = text.replace('\n', ' ')
     # multiple spaces -> single space
@@ -85,7 +90,7 @@ def translate_danish_to_english_in_batches(df: pd.DataFrame, text_col: str = "te
 @app.command()
 def main(
     model_names: List[str] = typer.Option(..., help="List of HuggingFace model names"),
-    dataset_name: str = typer.Option("chcaa/fiction4sentiment", help="HF Dataset name, must contain 'text' and 'label' columns"),
+    dataset_name: str = typer.Option(..., help="HF Dataset name, must contain 'text' and 'label' columns"),
     n_rows: Optional[int] = typer.Option(None, help="Limit to first N rows"),
     output_dir: Path = typer.Option("results", help="Directory where the results CSV will be saved"),
     translate: bool = typer.Option(False, help="Translate Danish sentences to English using Google Translate"),
@@ -98,7 +103,22 @@ def main(
 
     # load dataset
     ds = load_dataset(dataset_name)
-    df = pd.DataFrame(ds['train'], columns=['text', 'label', 'category', 'vader', 'org_lang'])
+    # Convert to pandas DataFrame (both train and test sets)
+    if dataset_name == "chcaa/Fiction4EmoBank":
+        # For Fiction4EmoBank, we need to load the 'train' and 'test' splits separately
+        df_train = pd.DataFrame(ds['train'])
+        df_test = pd.DataFrame(ds['test'])
+        df_train = pd.DataFrame(ds['train'])
+        df_test = pd.DataFrame(ds['test'])
+        # Combine train and test sets
+        df = pd.concat([df_train, df_test], ignore_index=True)
+        df = df.loc[df['original_dataset'] == 'EmoBank']
+
+        df = df[['sentence', 'label', 'category']]
+        df.columns = ['text', 'label', 'category']  # rename columns to match expected names
+    else:
+    # For the fiction4sentiment dataset, we can load the 'train' split directly
+        df = pd.DataFrame(ds['train'], columns=['text', 'label', 'category', 'vader', 'org_lang'])
 
     # TESTING PURPOSES (number of rows)
     if n_rows:
@@ -164,45 +184,93 @@ def main(
     # Now we compute the spearman correlation with the models
     logger.info("Computing Spearman correlation with human labels...")
 
-    # Define score columns (plus the precomputed ones)
-    colnames_to_check = colnames + ['vader']
+    if dataset_name == "chcaa/fiction4sentiment":
+        # Define score columns (plus the precomputed ones)
+        colnames_to_check = colnames + ['vader']
 
-    # Split data if translation is not used
-    df_dk = df[df['org_lang'] == 'dk']
-    df_en = df[df['org_lang'] == 'en']
+        # Split data if translation is not used
+        df_dk = df[df['org_lang'] == 'dk']
+        df_en = df[df['org_lang'] == 'en']
 
-    # Init correlations dictionary
-    spearman_dict = {lang: {} for lang in ['overall', 'dk', 'en']}
+        # Init correlations dictionary
+        spearman_dict = {lang: {} for lang in ['overall', 'dk', 'en']}
 
-    # Compute Spearman correlations for the overall dataset
-    for col in colnames_to_check:
-        corr, pval = spearmanr(df[col], df['label'])
-        spearman_dict['overall'][col] = {'Spearman': corr, 'p-value': pval}
+        # Compute Spearman correlations for the overall dataset
+        for col in colnames_to_check:
+            corr, pval = spearmanr(df[col], df['label'])
+            p_corr, p_pval = pearsonr(df[col], df['label'])
+            spearman_dict['overall'][col] = {'Spearman': corr, 'p-value': pval, 'Pearson': p_corr, 'Pearson p-value': p_pval}
 
-    # Compute Spearman correlations for the 'dk' subset
-    for col in colnames_to_check:
-        corr, pval = spearmanr(df_dk[col], df_dk['label'])
-        spearman_dict['dk'][col] = {'Spearman': corr, 'p-value': pval}
+        # Compute Spearman correlations for the 'dk' subset
+        for col in colnames_to_check:
+            corr, pval = spearmanr(df_dk[col], df_dk['label'])
+            p_corr, p_pval = pearsonr(df_dk[col], df_dk['label'])
+            spearman_dict['dk'][col] = {'Spearman': corr, 'p-value': pval, 'Pearson': p_corr, 'Pearson p-value': p_pval}
 
-    # Compute Spearman correlations for the 'en' subset
-    for col in colnames_to_check:
-        corr, pval = spearmanr(df_en[col], df_en['label'])
-        spearman_dict['en'][col] = {'Spearman': corr, 'p-value': pval}
+        # Compute Spearman correlations for the 'en' subset
+        for col in colnames_to_check:
+            corr, pval = spearmanr(df_en[col], df_en['label'])
+            p_corr, pval = pearsonr(df_en[col], df_en['label'])
+            spearman_dict['en'][col] = {'Spearman': corr, 'p-value': pval, 'Pearson': p_corr, 'Pearson p-value': pval}
 
-    # Save results to a TXT file w timestamp
-    txt_output_path = output_dir / f"{timestamp}_{dataset_name.split('/')[-1]}_spearman_log.txt"
+        # Save results to a TXT file w timestamp
+        txt_output_path = output_dir / f"{timestamp}_{dataset_name.split('/')[-1]}_spearman_log.txt"
 
-    with open(txt_output_path, "w") as f:
-        f.write(f"Spearman correlation results - {timestamp}\n")
-        f.write("=" * 40 + "\n")
-        # Write results for all sections (overall, dk, en)
-        for lang in ['overall', 'dk', 'en']:
-            f.write(f"\n----{lang.capitalize()} Results:\n")
-            for model, values in spearman_dict[lang].items():
+        with open(txt_output_path, "w") as f:
+            f.write(f"Spearman correlation results - {timestamp}\n")
+            f.write("=" * 40 + "\n")
+            # Write results for all sections (overall, dk, en)
+            for lang in ['overall', 'dk', 'en']:
+                f.write(f"\n----{lang.capitalize()} Results:\n")
+                for model, values in spearman_dict[lang].items():
+                    f.write(f"{model}:\n")
+                    f.write(f"  Spearman: {values['Spearman']:.4f}\n")
+                    f.write(f"  p-value : {values['p-value']:.4g}\n")
+                    f.write(f"  Pearson: {values['Pearson']:.4f}\n")
+                    f.write(f"  Pearson p-value: {values['Pearson p-value']:.4g}\n")
+        print(f"Spearman log saved to {txt_output_path}")
+        logger.info(f"Spearman log saved to {txt_output_path}")
+
+    else:
+        # for other datasets, we only compute the overall correlation
+        spearman_dict = {}
+        colnames_to_check = colnames
+        # remove nan values and log the number of rows before and after
+        initial_rows = len(df)
+        df = df.dropna(subset=colnames_to_check)
+        final_rows = len(df)
+        logger.info(f"Initial rows: {initial_rows}, Final rows after dropping NaNs: {final_rows}")
+        for col in colnames_to_check:
+            corr, pval = spearmanr(df[col], df['label'])
+            p_corr, p_pval = pearsonr(df[col], df['label'])
+            # add the results per category
+            for category in df['category'].unique():
+                category_df = df[df['category'] == category]
+                if len(category_df) > 1:
+                    cat_corr, cat_pval = spearmanr(category_df[col], category_df['label'])
+                    cat_p_corr, cat_p_pval = pearsonr(category_df[col], category_df['label'])
+                    spearman_dict[f"{col}_{category}"] = {
+                        'Spearman': cat_corr,
+                        'p-value': cat_pval,
+                        'Pearson': cat_p_corr,
+                        'Pearson p-value': cat_p_pval
+                    }
+            # add the overall results
+            spearman_dict[col] = {'Spearman': corr, 'p-value': pval, 'Pearson': p_corr, 'Pearson p-value': p_pval}
+                    
+        # Save results to a TXT file w timestamp
+        txt_output_path = output_dir / f"{timestamp}_{dataset_name.split('/')[-1]}_spearman_log.txt"
+        with open(txt_output_path, "w") as f:
+            f.write(f"Spearman correlation results - {timestamp}\n")
+            f.write("=" * 40 + "\n")
+            for model, values in spearman_dict.items():
                 f.write(f"{model}:\n")
                 f.write(f"  Spearman: {values['Spearman']:.4f}\n")
                 f.write(f"  p-value : {values['p-value']:.4g}\n")
+                f.write(f"  Pearson: {values['Pearson']:.4f}\n")
+                f.write(f"  Pearson p-value: {values['Pearson p-value']:.4g}\n")
 
+    print(f"Spearman log saved to {txt_output_path}")
     logger.info(f"Spearman log saved to {txt_output_path}")
 
 if __name__ == "__main__":
