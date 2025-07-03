@@ -4,7 +4,7 @@
 - *run main command like so*:
 
     python -m src.sentiment_benchmarking \
-    --dataset-name chcaa/Fiction4EmoBank \
+    --dataset-name chcaa/fiction4sentiment \
     --model-names cardiffnlp/twitter-xlm-roberta-base-sentiment-multilingual \
     --model-names cardiffnlp/xlm-roberta-base-sentiment-multilingual \
 

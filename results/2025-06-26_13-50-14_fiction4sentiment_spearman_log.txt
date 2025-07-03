@@ -1,0 +1,53 @@
+Spearman correlation results - 2025-06-26_13-50-14
+========================================
+
+----Overall Results:
+twitter_xlm_roberta_base_sentiment_multilingual:
+  Spearman: 0.5532
+  p-value : 0
+  Pearson: 0.5519
+  Pearson p-value: 0
+xlm_roberta_base_sentiment_multilingual:
+  Spearman: 0.6032
+  p-value : 0
+  Pearson: 0.5996
+  Pearson p-value: 0
+vader:
+  Spearman: 0.5142
+  p-value : 0
+  Pearson: 0.5349
+  Pearson p-value: 0
+
+----Dk Results:
+twitter_xlm_roberta_base_sentiment_multilingual:
+  Spearman: 0.5142
+  p-value : 1.037e-188
+  Pearson: 0.4943
+  Pearson p-value: 2.386e-172
+xlm_roberta_base_sentiment_multilingual:
+  Spearman: 0.6028
+  p-value : 1.503e-276
+  Pearson: 0.5839
+  Pearson p-value: 1.711e-255
+vader:
+  Spearman: 0.5443
+  p-value : 1.44e-215
+  Pearson: 0.5495
+  Pearson p-value: 1.679e-220
+
+----En Results:
+twitter_xlm_roberta_base_sentiment_multilingual:
+  Spearman: 0.5813
+  p-value : 0
+  Pearson: 0.5968
+  Pearson p-value: 0
+xlm_roberta_base_sentiment_multilingual:
+  Spearman: 0.5943
+  p-value : 0
+  Pearson: 0.6026
+  Pearson p-value: 0
+vader:
+  Spearman: 0.4462
+  p-value : 5.011e-207
+  Pearson: 0.4860
+  Pearson p-value: 5.011e-207

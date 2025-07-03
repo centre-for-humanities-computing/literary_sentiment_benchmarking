@@ -151,3 +151,10 @@
 2025-06-13T13:26:40.947147+0200 Computing Spearman correlation with human labels...
 2025-06-13T13:26:40.949617+0200 Initial rows: 8870, Final rows after dropping NaNs: 8869
 2025-06-13T13:26:40.967684+0200 Spearman log saved to results/2025-06-13_13-20-27_Fiction4EmoBank_spearman_log.txt
+2025-06-26T13:50:14.627584+0200 Model names: ['cardiffnlp/twitter-xlm-roberta-base-sentiment-multilingual', 'cardiffnlp/xlm-roberta-base-sentiment-multilingual']
+2025-06-26T13:52:00.417511+0200 Model cardiffnlp/twitter-xlm-roberta-base-sentiment-multilingual completed.
+2025-06-26T13:53:39.231042+0200 Model cardiffnlp/xlm-roberta-base-sentiment-multilingual completed.
+2025-06-26T13:53:39.271331+0200 Results saved to results/fiction4sentiment_sentiment_benchmark_results.csv
+2025-06-26T13:53:39.271468+0200 Computing Spearman correlation with human labels...
+2025-06-26T13:53:39.293364+0200 Spearman log saved to results/2025-06-26_13-50-14_fiction4sentiment_spearman_log.txt
+2025-06-26T13:53:39.293460+0200 Spearman log saved to results/2025-06-26_13-50-14_fiction4sentiment_spearman_log.txt
