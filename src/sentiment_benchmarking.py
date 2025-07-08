@@ -108,8 +108,6 @@ def main(
         # For Fiction4EmoBank, we need to load the 'train' and 'test' splits separately
         df_train = pd.DataFrame(ds['train'])
         df_test = pd.DataFrame(ds['test'])
-        df_train = pd.DataFrame(ds['train'])
-        df_test = pd.DataFrame(ds['test'])
         # Combine train and test sets
         df = pd.concat([df_train, df_test], ignore_index=True)
         df = df.loc[df['original_dataset'] == 'EmoBank']
