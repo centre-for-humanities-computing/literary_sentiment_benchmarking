@@ -1,0 +1,83 @@
+Spearman correlation results - 2025-07-09_23-19-25
+========================================
+
+----Overall Results:
+twitter_xlm_roberta_base_sentiment_multilingual:
+  Spearman: 0.5532
+  p-value : 0
+  Pearson: 0.5519
+  Pearson p-value: 0
+xlm_roberta_base_sentiment_multilingual:
+  Spearman: 0.6032
+  p-value : 0
+  Pearson: 0.5996
+  Pearson p-value: 0
+memo_bert_sa:
+  Spearman: 0.4653
+  p-value : 0
+  Pearson: 0.4416
+  Pearson p-value: 4.573e-299
+da_sentiment_base:
+  Spearman: 0.2279
+  p-value : 5.009e-75
+  Pearson: 0.2334
+  Pearson p-value: 1.127e-78
+danish_sentiment:
+  Spearman: 0.5387
+  p-value : 0
+  Pearson: 0.5404
+  Pearson p-value: 0
+
+----Dk Results:
+twitter_xlm_roberta_base_sentiment_multilingual:
+  Spearman: 0.5142
+  p-value : 1.037e-188
+  Pearson: 0.4943
+  Pearson p-value: 2.386e-172
+xlm_roberta_base_sentiment_multilingual:
+  Spearman: 0.6028
+  p-value : 1.503e-276
+  Pearson: 0.5839
+  Pearson p-value: 1.711e-255
+memo_bert_sa:
+  Spearman: 0.6508
+  p-value : 0
+  Pearson: 0.5686
+  Pearson p-value: 2.046e-239
+da_sentiment_base:
+  Spearman: 0.4470
+  p-value : 1.47e-137
+  Pearson: 0.4438
+  Pearson p-value: 2.338e-135
+danish_sentiment:
+  Spearman: 0.4851
+  p-value : 3.791e-165
+  Pearson: 0.4717
+  Pearson p-value: 4.897e-155
+
+----En Results:
+twitter_xlm_roberta_base_sentiment_multilingual:
+  Spearman: 0.5813
+  p-value : 0
+  Pearson: 0.5968
+  Pearson p-value: 0
+xlm_roberta_base_sentiment_multilingual:
+  Spearman: 0.5943
+  p-value : 0
+  Pearson: 0.6026
+  Pearson p-value: 0
+memo_bert_sa:
+  Spearman: 0.2180
+  p-value : 1.391e-48
+  Pearson: 0.2439
+  Pearson p-value: 1.391e-48
+da_sentiment_base:
+  Spearman: 0.0786
+  p-value : 1.617e-08
+  Pearson: 0.0953
+  Pearson p-value: 1.617e-08
+danish_sentiment:
+  Spearman: 0.5786
+  p-value : 0
+  Pearson: 0.5911
+  Pearson p-value: 0

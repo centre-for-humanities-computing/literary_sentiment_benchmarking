@@ -116,7 +116,7 @@ def main(
         df.columns = ['text', 'label', 'category']  # rename columns to match expected names
     else:
     # For the fiction4sentiment dataset, we can load the 'train' split directly
-        df = pd.DataFrame(ds['train'], columns=['text', 'label', 'category', 'vader', 'org_lang'])
+        df = pd.DataFrame(ds['train'], columns=['text', 'label', 'category', 'org_lang'])
 
     # TESTING PURPOSES (number of rows)
     if n_rows:
@@ -132,7 +132,7 @@ def main(
         output_dir = Path("results/translated")
 
         # check if the saved translations already exist
-        path_to_translations = f"data/{dataset_name.split('/')[-1]}_saved_translations.csv"
+        path_to_translations = f"/Users/au324704/Desktop/2024_GOLDEN_MATRIX/SA_testing/data/{dataset_name.split('/')[-1]}_saved_translations.csv"
         if Path(path_to_translations).exists():
             # load them
             df = pd.read_csv(path_to_translations)
@@ -171,7 +171,7 @@ def main(
     
     # Save the results to a CSV file
     output_dir.mkdir(parents=True, exist_ok=True)  # create directory if it doesn't exist
-    output_path = output_dir / f"{dataset_name.split('/')[-1]}_sentiment_benchmark_results.csv"
+    output_path = output_dir / f"{timestamp}_{dataset_name.split('/')[-1]}_sentiment_benchmark_results.csv"
     df.to_csv(output_path, index=False)
     print(f"\nSaved results to {output_path}")
     logger.info(f"Results saved to {output_path}")
@@ -184,7 +184,7 @@ def main(
 
     if dataset_name == "chcaa/fiction4sentiment":
         # Define score columns (plus the precomputed ones)
-        colnames_to_check = colnames + ['vader']
+        colnames_to_check = colnames
 
         # Split data if translation is not used
         df_dk = df[df['org_lang'] == 'dk']

@@ -7,14 +7,10 @@
     --dataset-name chcaa/fiction4sentiment \
     --model-names cardiffnlp/twitter-xlm-roberta-base-sentiment-multilingual \
     --model-names cardiffnlp/xlm-roberta-base-sentiment-multilingual \
-
-    (english)
-
-
-    (danish)
     --model-names MiMe-MeMo/MeMo-BERT-SA \
     --model-names alexandrainst/da-sentiment-base \
-    --model-names vesteinn/danish_sentiment
+    --model-names vesteinn/danish_sentiment \
+    --translate
 
     option to add, for testing a number of rows to run, e.g.: ```--n-rows 10``` 
 

@@ -158,3 +158,24 @@
 2025-06-26T13:53:39.271468+0200 Computing Spearman correlation with human labels...
 2025-06-26T13:53:39.293364+0200 Spearman log saved to results/2025-06-26_13-50-14_fiction4sentiment_spearman_log.txt
 2025-06-26T13:53:39.293460+0200 Spearman log saved to results/2025-06-26_13-50-14_fiction4sentiment_spearman_log.txt
+2025-07-09T22:54:45.388024+0200 Model names: ['cardiffnlp/twitter-xlm-roberta-base-sentiment-multilingual', 'cardiffnlp/xlm-roberta-base-sentiment-multilingual', 'MiMe-MeMo/MeMo-BERT-SA', 'alexandrainst/da-sentiment-base', 'vesteinn/danish_sentiment']
+2025-07-09T22:54:50.473683+0200 Loaded saved translations.
+2025-07-09T22:56:12.250353+0200 Model cardiffnlp/twitter-xlm-roberta-base-sentiment-multilingual completed.
+2025-07-09T22:57:30.051678+0200 Model cardiffnlp/xlm-roberta-base-sentiment-multilingual completed.
+2025-07-09T22:58:49.286173+0200 Model MiMe-MeMo/MeMo-BERT-SA completed.
+2025-07-09T22:59:56.453587+0200 Model alexandrainst/da-sentiment-base completed.
+2025-07-09T23:01:13.117055+0200 Model vesteinn/danish_sentiment completed.
+2025-07-09T23:01:13.161082+0200 Results saved to results/translated/fiction4sentiment_sentiment_benchmark_results.csv
+2025-07-09T23:01:13.161187+0200 Computing Spearman correlation with human labels...
+2025-07-09T23:01:13.181776+0200 Spearman log saved to results/translated/2025-07-09_22-54-45_fiction4sentiment_spearman_log.txt
+2025-07-09T23:01:13.181860+0200 Spearman log saved to results/translated/2025-07-09_22-54-45_fiction4sentiment_spearman_log.txt
+2025-07-09T23:19:25.416582+0200 Model names: ['cardiffnlp/twitter-xlm-roberta-base-sentiment-multilingual', 'cardiffnlp/xlm-roberta-base-sentiment-multilingual', 'MiMe-MeMo/MeMo-BERT-SA', 'alexandrainst/da-sentiment-base', 'vesteinn/danish_sentiment']
+2025-07-09T23:20:53.181803+0200 Model cardiffnlp/twitter-xlm-roberta-base-sentiment-multilingual completed.
+2025-07-09T23:22:10.892524+0200 Model cardiffnlp/xlm-roberta-base-sentiment-multilingual completed.
+2025-07-09T23:23:32.923048+0200 Model MiMe-MeMo/MeMo-BERT-SA completed.
+2025-07-09T23:24:38.182921+0200 Model alexandrainst/da-sentiment-base completed.
+2025-07-09T23:26:01.773997+0200 Model vesteinn/danish_sentiment completed.
+2025-07-09T23:26:01.811990+0200 Results saved to results/2025-07-09_23-19-25_fiction4sentiment_sentiment_benchmark_results.csv
+2025-07-09T23:26:01.812105+0200 Computing Spearman correlation with human labels...
+2025-07-09T23:26:01.831459+0200 Spearman log saved to results/2025-07-09_23-19-25_fiction4sentiment_spearman_log.txt
+2025-07-09T23:26:01.831541+0200 Spearman log saved to results/2025-07-09_23-19-25_fiction4sentiment_spearman_log.txt
